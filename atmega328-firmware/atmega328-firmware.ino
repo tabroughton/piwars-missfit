@@ -54,7 +54,7 @@ void loop(){
 		else if(cmd[0]==DIGITALWRITE_CMD)
 		  digitalWrite(cmd[1],cmd[2]);
 		else if(cmd[0]==ANALOGREAD_CMD){
-		  reading=analogRead(cmd[1]);
+		  int reading=analogRead(cmd[1]);
       //# analog values may be greater than 255 and we are dealing with bytes
 		  analogVal[1]=reading/256;
 		  analogVal[2]=reading%256;
