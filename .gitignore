@@ -1,1 +1,8 @@
+# using remote sync config has secure info
 .remote-sync.json
+
+#Compiled files
+# python
+.pyc
+# Arduino builds
+/software/*/*-build
