@@ -93,8 +93,42 @@ def analogRead(pin):
 	pinVal = read_i2c_block(address)
 	return pinVal[1] * 255 + pinVal[2]
 
-
 # Write PWM
 def analogWrite(pin, value):
 	write_i2c_block(address, analogWrite_cmd + [pin, value])
 	return 1
+
+
+if __name__ == '__main__': # only run if main program
+    print "testing pimaster"
+    set_debugMode(1)
+    cont = 1
+    while cont == 1:
+        command = int(raw_input("what command index do you want? (6 for exit)"))
+        print command
+
+        if command in [1, 2, 3, 4, 5]:
+            pin = int(raw_input("which pin?"))
+
+        if command in [3, 5]:
+            val = int(raw_input("what value to write?"))
+
+        if command == 1:
+            print "set pin mode"
+            mode = raw_input("what mode?")
+            pinMode(pin, mode)
+        elif command == 2:
+            print "digital read"
+            print digitalRead(pin)
+        elif command == 3:
+            print "digital write"
+            digitalWrite(pin, val)
+        elif command == 4:
+            print "analog read"
+            print analogRead(pin, val)
+        elif command == 5:
+            print "analog write"
+            analogWrite(pin, val)
+        elif command == 6:
+            print "bye bye tester"
+            cont = 0

@@ -23,7 +23,7 @@ byte digitalVal, analogVal[3];
 
 void receiveData(int byteCount){
     while(Wire.available()){
-      if(Wire.available()==4)  {
+      if(Wire.available()==3)  {
         completed_cmd=0;
         index=0;
       }
@@ -42,24 +42,26 @@ void setup(){
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(receiveData);
   Wire.onRequest(sendData);
+  pinMode(13, OUTPUT);
 }
 
 void loop(){
-	if(index==4 && completed_cmd == 0 ){
+	if(index==3 && completed_cmd == 0 ){
 
-		if(cmd[0]==PINMODE_CMD)
+		if(cmd[0]==PINMODE_CMD){
 		  pinMode(cmd[1],cmd[2]);
-		else if(cmd[0]==DIGITALREAD_CMD)
+		}else if(cmd[0]==DIGITALREAD_CMD){
 		  digitalVal=digitalRead(cmd[1]);
-		else if(cmd[0]==DIGITALWRITE_CMD)
+		}else if(cmd[0]==DIGITALWRITE_CMD){
 		  digitalWrite(cmd[1],cmd[2]);
-		else if(cmd[0]==ANALOGREAD_CMD){
+		}else if(cmd[0]==ANALOGREAD_CMD){
 		  int reading=analogRead(cmd[1]);
       //# analog values may be greater than 255 and we are dealing with bytes
 		  analogVal[1]=reading/256;
 		  analogVal[2]=reading%256;
-		}else if(cmd[0]==ANALOGWRITE_CMD)
+		}else if(cmd[0]==ANALOGWRITE_CMD){
 		  analogWrite(cmd[1],cmd[2]);
+    }
 
     completed_cmd=1;
   }
