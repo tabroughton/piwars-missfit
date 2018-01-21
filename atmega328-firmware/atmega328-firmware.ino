@@ -21,6 +21,23 @@ int index=0;
 int completed_cmd=0;
 byte digitalVal, analogVal[3];
 
+void receiveData(int byteCount){
+    while(Wire.available()){
+      if(Wire.available()==4)  {
+        completed_cmd=0;
+        index=0;
+      }
+      cmd[index++] = Wire.read();
+    }
+}
+
+void sendData(){
+  if(cmd[0] == DIGITALREAD_CMD)
+    Wire.write(digitalVal);
+  else if(cmd[0] == ANALOGREAD_CMD)
+    Wire.write(analogVal, 3);
+}
+
 void setup(){
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(receiveData);
@@ -46,21 +63,4 @@ void loop(){
 
     completed_cmd=1;
   }
-}
-
-void receiveData(int byteCount){
-    while(Wire.available()){
-      if(Wire.available()==4)  {
-        completed_cmd=0;
-        index=0;
-      }
-      cmd[index++] = Wire.read();
-    }
-}
-
-void sendData(){
-  if(cmd[0] == DIGITALREAD_CMD))
-    Wire.write(digitalVal);
-  else if(cmd[0] == ANALOGREAD_CMD)
-    Wire.write(analogVal, 3);
 }
