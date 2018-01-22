@@ -19,7 +19,7 @@
 int cmd[4];
 int index=0;
 int completed_cmd=0;
-byte digitalVal, analogVal[3];
+byte digital_reading=0,analog_reading[4];
 
 void receiveData(int byteCount){
     while(Wire.available()){
@@ -32,17 +32,17 @@ void receiveData(int byteCount){
 }
 
 void sendData(){
-  if(cmd[0] == DIGITALREAD_CMD)
-    Wire.write(digitalVal);
-  else if(cmd[0] == ANALOGREAD_CMD)
-    Wire.write(analogVal, 3);
+  if(cmd[0] == DIGITALREAD_CMD){
+    Wire.write(digital_reading);
+  }else if(cmd[0] == ANALOGREAD_CMD){
+    Wire.write(analog_reading, 3);
+  }
 }
 
 void setup(){
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(receiveData);
   Wire.onRequest(sendData);
-  pinMode(13, OUTPUT);
 }
 
 void loop(){
@@ -51,14 +51,16 @@ void loop(){
 		if(cmd[0]==PINMODE_CMD){
 		  pinMode(cmd[1],cmd[2]);
 		}else if(cmd[0]==DIGITALREAD_CMD){
-		  digitalVal=digitalRead(cmd[1]);
+		  digital_reading=digitalRead(cmd[1]);
 		}else if(cmd[0]==DIGITALWRITE_CMD){
 		  digitalWrite(cmd[1],cmd[2]);
 		}else if(cmd[0]==ANALOGREAD_CMD){
-		  int reading=analogRead(cmd[1]);
-      //# analog values may be greater than 255 and we are dealing with bytes
-		  analogVal[1]=reading/256;
-		  analogVal[2]=reading%256;
+		  short sensor_value=analogRead(cmd[1]);
+      analog_reading[0] = map(sensor_value, 0, 1023, 0, 255);
+      // using map to send first byte as can not send and receive block data atm but need to to get granular
+      // data back to the pi see https://www.raspberrypi.org/forums/viewtopic.php?f=28&t=203286
+		  analog_reading[1]=sensor_value/256;
+		  analog_reading[2]=sensor_value%256;
 		}else if(cmd[0]==ANALOGWRITE_CMD){
 		  analogWrite(cmd[1],cmd[2]);
     }
