@@ -91,11 +91,11 @@ def analogWrite(pin, value):
 
 
 if __name__ == '__main__': # only run if main program
-    print "testing pimaster"
+    print ("testing pimaster")
     cont = 1
     while cont == 1:
         command = int(raw_input("what command index do you want? (6 for exit)"))
-        print command
+        print (command)
 
         if command in [1, 2, 3, 4, 5]:
             pin = int(raw_input("which pin?"))
@@ -104,26 +104,26 @@ if __name__ == '__main__': # only run if main program
             val = int(raw_input("what value to write?"))
 
         if command == 1:
-            print "set pin mode"
+            print ("set pin mode")
             mode = raw_input("what mode?")
             pinMode(pin, mode)
         elif command == 2:
-            print "digital read"
-            print digitalRead(pin)
+            print ("digital read")
+            print (digitalRead(pin))
         elif command == 3:
-            print "digital write"
+            print ("digital write")
             digitalWrite(pin, val)
         elif command == 4:
-            print "analog read"
+            print ("analog read")
             try:
                 while True:
-                    print analogRead(pin)
+                    print (analogRead(pin))
                     time.sleep(.05)
             except KeyboardInterrupt:
                 pass
         elif command == 5:
-            print "analog write"
+            print ("analog write")
             analogWrite(pin, val)
         elif command == 6:
-            print "bye bye tester"
+            print ("bye bye tester")
             cont = 0
