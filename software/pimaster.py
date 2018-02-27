@@ -7,8 +7,8 @@
 #
 
 #set up the i2c system management bus
-import smbus
-bus = smbus.SMBus(1)
+from smbus2 import SMBus
+bus = SMBus(1)
 
 import time
 
@@ -94,18 +94,18 @@ if __name__ == '__main__': # only run if main program
     print ("testing pimaster")
     cont = 1
     while cont == 1:
-        command = int(raw_input("what command index do you want? (6 for exit)"))
+        command = int(input("what command index do you want? (6 for exit)"))
         print (command)
 
         if command in [1, 2, 3, 4, 5]:
-            pin = int(raw_input("which pin?"))
+            pin = int(input("which pin?"))
 
         if command in [3, 5]:
-            val = int(raw_input("what value to write?"))
+            val = int(input("what value to write?"))
 
         if command == 1:
             print ("set pin mode")
-            mode = raw_input("what mode?")
+            mode = input("what mode?")
             pinMode(pin, mode)
         elif command == 2:
             print ("digital read")
