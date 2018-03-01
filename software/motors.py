@@ -44,11 +44,11 @@ class Motor:
         self.lastSpeed = 0
         self.speed = 0
 
-        pimaster.pinMode(self.cwPin, "OUTPUT")
-        pimaster.pinMode(self.ccwPin, "OUTPUT")
-        pimaster.pinMode(self.pwmPin, "OUTPUT")
-        if enPin > -1:
-            pimaster.pinMode(self.enPin, "OUTPUT")
+        pi2c.pinMode(self.cwPin, "OUTPUT")
+        pi2c.pinMode(self.ccwPin, "OUTPUT")
+        pi2c.pinMode(self.pwmPin, "OUTPUT")
+        if self.enPin > -1:
+            pi2c.pinMode(self.enPin, "OUTPUT")
 
         self.set_speed(Speed)
         self.set_direction(Direction)
@@ -86,24 +86,24 @@ class Motor:
         """ Turns the motor on.
         """
         if self.direction == "CW":
-            pimaster.digitalWrite(self.cwPin, Motor.HIGH)
-            pimaster.digitalWrite(self.ccwPin, Motor.LOW)
+            pi2c.digitalWrite(self.cwPin, Motor.HIGH)
+            pi2c.digitalWrite(self.ccwPin, Motor.LOW)
         else:
-            pimaster.digitalWrite(self.ccwPin, Motor.HIGH)
-            pimaster.digitalWrite(self.cwPin, Motor.LOW)
-        pimaster.analogWrite(self.pwmPin, int(self.speed))
+            pi2c.digitalWrite(self.ccwPin, Motor.HIGH)
+            pi2c.digitalWrite(self.cwPin, Motor.LOW)
+        pi2c.analogWrite(self.pwmPin, int(self.speed))
         if self.enPin > -1:
-            pimaster.digitalWrite(self.enPin, Motor.HIGH)
+            pi2c.digitalWrite(self.enPin, Motor.HIGH)
 
     def off(self):
         """ Turns the motor off.
         """
         print("turning motor off")
         if self.enPin > -1:
-            pimaster.digitalWrite(self.enPin, Motor.LOW)
-        pimaster.digitalWrite(self.cwPin, Motor.LOW)
-        pimaster.digitalWrite(self.ccwPin, Motor.LOW)
-        pimaster.analogWrite(self.pwmPin, Motor.LOW)
+            pi2c.digitalWrite(self.enPin, Motor.LOW)
+        pi2c.digitalWrite(self.cwPin, Motor.LOW)
+        pi2c.digitalWrite(self.ccwPin, Motor.LOW)
+        pi2c.analogWrite(self.pwmPin, Motor.LOW)
 
     def get_speed(self): return self.speed
     def get_direction(self): return self.direction
@@ -147,7 +147,6 @@ class Driver(object):
             action.
         """
         print("driver on")
-        self.motorLeft
         self.driving = True
 
     def __del__(self):
@@ -174,16 +173,26 @@ class Keyboard_Driver(object):
                 L = left
                 S = stop
         """
-        return{
-            'F' : self.driver.drive(125, 125),
-            'B' : self.driver.drive(-125, -125),
-            'R' : self.driver..drive(-100, 100),
-            'L' : self.driver.(drive(100, -100)),
-            'S' : self.driver.stop,
-        }.get(CMD, self.invalidCMD)
+        if CMD == 'F':
+            self.driver.drive(125, 125)
+        elif CMD == 'B':
+            self.driver.drive(-125, -125)
+        elif CMD == 'R':
+            self.driver.drive(-100, 100)
+        elif CMD == 'L':
+            self.driver.drive(100, -100)
+        elif CMD == 'S':
+            self.driver.stop()
+        else:
+            self.invalidCMD()
+
 
 if __name__ == '__main__':
-    kDriver = Keyboard_Driver()
+    try:
+        kDriver = Keyboard_Driver()
+    except Exception as e:
+        print(str(e))
+
     while 1:
         try:
             #store any data from the command line input
@@ -195,7 +204,7 @@ if __name__ == '__main__':
             break
 
         except Exception as e:
-            print str(e)
+            print(str(e))
         	# Turn motors off
             kDriver.action('S');
             break

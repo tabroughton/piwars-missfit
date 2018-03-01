@@ -7,8 +7,8 @@
 #
 
 #set up the i2c system management bus
-from smbus2 import SMBus
-bus = SMBus(1)
+import smbus
+bus = smbus.SMBus(1)
 
 import time
 
@@ -53,7 +53,7 @@ def read_i2c_block(address):
             return bus.read_i2c_block_data(address, 1)
         except IOError:
                 print ("IOError")
-        return -1
+    return -1
 
 # Setting Up Pin mode on Arduino
 def pinMode(pin, mode):
@@ -77,12 +77,13 @@ def digitalWrite(pin, value):
 # Read analog value from Pin
 def analogRead(pin):
     write_i2c_block(address, analogRead_cmd + [pin, unused])
-    analog_reading =  read_i2c_byte(address)
-    return analog_reading
+    #analog_reading =  read_i2c_byte(address)
+    #return analog_reading
     # there's an issue getting block data
-    # print read_i2c_block(address)
+    read_i2c_byte(address)
+    pinVal = read_i2c_block(address)
     #return number
-    #return pinVal[1] * 255 + pinVal[2]
+    return pinVal[1] * 255 + pinVal[2]
 
 # Write PWM
 def analogWrite(pin, value):
