@@ -1,5 +1,6 @@
 # using remote sync config has secure info
 .remote-sync.json
+wpa_supplicant.conf
 
 #Compiled files
 # python
